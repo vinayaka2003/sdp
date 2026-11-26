@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f3">
+    <title>{% block title %}TRAFFIC GODS{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a class="brand" href="{{ url_for('dashboard') }}" aria-label="TRAFFIC GODS home">
+                    <span class="brand-name">TRAFFIC GODS</span>
+                </a>
+
+                <nav class="main-nav" aria-label="Main navigation">
+                    <a class="nav-link{% if request.endpoint == 'dashboard' %} is-active{% endif %}"
+                       href="{{ url_for('dashboard') }}"
+                       {% if request.endpoint == 'dashboard' %}aria-current="page"{% endif %}>
+                        <span class="nav-icon" aria-hidden="true">⌂</span>
+                        <span>Overview</span>
+                    </a>
+                    <a class="nav-link{% if request.endpoint == 'students' %} is-active{% endif %}"
+                       href="{{ url_for('students') }}"
+                       {% if request.endpoint == 'students' %}aria-current="page"{% endif %}>
+                        <span class="nav-icon" aria-hidden="true">◎</span>
+                        <span>Students</span>
+                    </a>
+                </nav>
+
+                <span class="workspace-badge"><span aria-hidden="true"></span>Student workspace</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">MANAGEMENT PORTAL</p>
+                    <h1>{% block page_heading %}Overview{% endblock %}</h1>
+                </div>
+            </header>
+
+            <section class="page-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="flash-stack" aria-live="polite">
+                            {% for category, message in messages %}
+                                <div class="flash-message flash-{{ category }}">
+                                    <span>{{ message }}</span>
+                                    <button class="flash-close" type="button" aria-label="Dismiss notification">&times;</button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </section>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Students · TRAFFIC GODS{% endblock %}
+{% block page_heading %}Students{% endblock %}
+
+{% block content %}
+    <section class="welcome-row students-intro">
+        <div>
+            <h2>People make the community.</h2>
+            <p>Add a student or keep their course details up to date.</p>
+        </div>
+        <span class="count-badge">{{ students|length }} student{% if students|length != 1 %}s{% endif %}</span>
+    </section>
+
+    <section class="panel form-panel">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">NEW RECORD</p>
+                <h2>Add a student</h2>
+            </div>
+        </div>
+        <form class="student-form" action="{{ url_for('add_student') }}" method="post">
+            <label class="form-field">
+                <span>Full name</span>
+                <input type="text" name="name" placeholder="e.g. Alex Morgan" autocomplete="name" required>
+            </label>
+            <label class="form-field">
+                <span>Email address</span>
+                <input type="email" name="email" placeholder="alex@example.com" autocomplete="email" required>
+            </label>
+            <label class="form-field">
+                <span>Course</span>
+                <input type="text" name="course" placeholder="e.g. Product Design" required>
+            </label>
+            <button class="button button-primary form-submit" type="submit">Add student <span aria-hidden="true">＋</span></button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="panel-heading">
+            <div>
+                <p class="eyebrow">DIRECTORY</p>
+                <h2>All students</h2>
+            </div>
+        </div>
+
+        {% if students %}
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col">Student</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Course</th>
+                            <th scope="col"><span class="visually-hidden">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td>
+                                    <div class="person-cell">
+                                        <span class="avatar" aria-hidden="true">{{ student.name[0]|upper }}</span>
+                                        <span class="person-name">{{ student.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="muted-cell">{{ student.email }}</td>
+                                <td><span class="course-pill">{{ student.course }}</span></td>
+                                <td class="action-cell">
+                                    <form action="{{ url_for('delete_student', student_id=student.id) }}" method="post"
+                                          data-confirm="Remove {{ student.name }} from the student list?">
+                                        <button class="button-delete" type="submit" aria-label="Delete {{ student.name }}">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state compact-empty">
+                <span class="empty-icon" aria-hidden="true">◎</span>
+                <h3>Your list is empty</h3>
+                <p>Use the form above to add your first student.</p>
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
